@@ -6,10 +6,14 @@ A simple MySQL/TiDB CLI client using PyMySQL. Connects with TLS by default.
 
 ```bash
 # Run directly with uvx (no install needed)
-uvx --from py-tidbcli ticli -h <host> -u <user> -p <password>
+uvx --from git+https://github.com/bohnen/py-tidbcli ticli -h <host> -u <user> -p <password>
+
+# Install as a persistent tool with uv
+uv tool install git+https://github.com/bohnen/py-tidbcli
+ticli -h <host> -u <user> -p <password>
 
 # Or install with pip
-pip install py-tidbcli
+pip install git+https://github.com/bohnen/py-tidbcli
 ticli -h <host> -u <user> -p <password>
 ```
 
