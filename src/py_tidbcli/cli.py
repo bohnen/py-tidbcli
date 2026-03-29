@@ -18,8 +18,12 @@ def parse_args():
     parser.add_argument("-p", "--password", default="", dest="password", help="Password")
     parser.add_argument("--skip-ssl", action="store_true", help="Disable TLS connection")
     parser.add_argument("-D", "--database", default="test", dest="database", help="Database to use (default: test)")
-    parser.add_argument("-e", "--execute", default=None, dest="execute", help="Execute SQL statement and exit")
-    return parser.parse_args()
+    parser.add_argument("-e", "--execute", default=None, dest="execute", help="Execute SQL statement(s) and exit (semicolon-separated)")
+    parser.add_argument("dbname", nargs="?", default=None, help="Database name (overrides -D)")
+    args = parser.parse_args()
+    if args.dbname:
+        args.database = args.dbname
+    return args
 
 
 def connect(args):
@@ -124,13 +128,15 @@ def main():
 
     try:
         if args.execute:
-            try:
-                with conn.cursor() as cursor:
-                    cursor.execute(args.execute)
-                    format_result(cursor)
-            except pymysql.Error as e:
-                print(f"ERROR {e.args[0]}: {e.args[1]}")
-                sys.exit(1)
+            statements = [s.strip() for s in args.execute.split(";") if s.strip()]
+            for sql in statements:
+                try:
+                    with conn.cursor() as cursor:
+                        cursor.execute(sql)
+                        format_result(cursor)
+                except pymysql.Error as e:
+                    print(f"ERROR {e.args[0]}: {e.args[1]}")
+                    sys.exit(1)
         else:
             repl(conn)
     finally:
