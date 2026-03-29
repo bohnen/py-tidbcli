@@ -1,0 +1,13 @@
+[project]
+name = "py-tidbcli"
+version = "0.1.0"
+description = "A simple MySQL/TiDB CLI client using PyMySQL"
+requires-python = ">=3.9"
+dependencies = ["pymysql[rsa]>=1.1.0"]
+
+[project.scripts]
+ticli = "py_tidbcli.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
